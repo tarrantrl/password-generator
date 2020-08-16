@@ -62,6 +62,28 @@ var generatePassword = function () {
   }
 
   // generate a password of passwordLength including each of the character types chosen
+  var password = "";
+
+  // generate password char set based on prompts
+  var passwordCharSet = [];
+  // if the user wanted to include lower chars, append to passwordCharSet array
+  if (includeLower){
+    passwordCharSet = passwordCharSet.concat(lowerChars);
+  }
+  // if the user wanted to include upper chars, append to passwordCharSet array
+  if (includeUpper){
+    passwordCharSet = passwordCharSet.concat(upperChars);
+  }
+  // if the user wanted to include numeric chars, append to passwordCharSet array
+  if (includeNumeric){
+    passwordCharSet = passwordCharSet.concat(numericChars);
+  }
+  // if the user wanted to include special chars, append to passwordCharSet array
+  if (includeSpecial){
+    passwordCharSet = passwordCharSet.concat(specialChars);
+  }
+  
+  
   
 }
 
