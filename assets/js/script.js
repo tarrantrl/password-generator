@@ -23,18 +23,17 @@ var special4 = generateCharsArray("{", 4);
 // combine special char arrays into one array
 var specialChars = special1.concat(special2, special3, special4);
 
-// Get references to the #generate element
-var generateBtn = document.querySelector("#generate");
-
-// Write password to the #password input
-function writePassword() {
-  var password = generatePassword();
-  var passwordText = document.querySelector("#password");
-
-  passwordText.value = password;
-
+// function to prompt user to choose if they want to include each character type
+var getCharacters = function(){
+  var lower = window.confirm("You can include lowercase, uppercase, numeric, and/or special characters. You must include at least one character type.\n\n Would you like to include lowercase characters?");
+  var upper = window.confirm("You can include lowercase, uppercase, numeric, and/or special characters. You must include at least one character type.\n\n Would you like to include uppercase characters?");
+  var numeric = window.confirm("You can include lowercase, uppercase, numeric, and/or special characters. You must include at least one character type.\n\n Would you like to include numeric characters?");
+  var special = window.confirm("You can include lowercase, uppercase, numeric, and/or special characters. You must include at least one character type.\n\n Would you like to include special characters?");
+  // return array of boolean values for whether the user choose to include each character type
+  return [lower, upper, numeric, special];
 }
 
+// function to prompt user for password parameters and generate password
 var generatePassword = function () {
   // prompt for the length of the password
   // choose a length of at least 8 characters and no more than 128 characters
@@ -61,9 +60,6 @@ var generatePassword = function () {
     includeSpecial = characterTypes[3];
   }
 
-  // generate a password of passwordLength including each of the character types chosen
-  var password = "";
-
   // generate password char set based on prompts
   var passwordCharSet = [];
   // if the user wanted to include lower chars, append to passwordCharSet array
@@ -83,18 +79,32 @@ var generatePassword = function () {
     passwordCharSet = passwordCharSet.concat(specialChars);
   }
   
+  // generate a password of passwordLength including each of the character types chosen
+  var password = "";
   
+  // generate password of specified length
+  for (i = 0; i < passwordLength; i++){
+    // choose a random number from 0 to length of passwordCharSet
+    var index = Math.floor(Math.random() * passwordCharSet.length);
+    // append character at that index to password
+    password += passwordCharSet[index];
+    console.log (index + ", " + password);
+  }
   
+  return password;
 }
 
-// function to prompt user to choose if they want to include each character type
-var getCharacters = function(){
-  var lower = window.confirm("You can include lowercase, uppercase, numeric, and/or special characters. You must include at least one character type.\n\n Would you like to include lowercase characters?");
-  var upper = window.confirm("You can include lowercase, uppercase, numeric, and/or special characters. You must include at least one character type.\n\n Would you like to include uppercase characters?");
-  var numeric = window.confirm("You can include lowercase, uppercase, numeric, and/or special characters. You must include at least one character type.\n\n Would you like to include numeric characters?");
-  var special = window.confirm("You can include lowercase, uppercase, numeric, and/or special characters. You must include at least one character type.\n\n Would you like to include special characters?");
-  // return array of boolean values for whether the user choose to include each character type
-  return [lower, upper, numeric, special];
+// Get references to the #generate element
+var generateBtn = document.querySelector("#generate");
+
+// Write password to the #password input
+function writePassword() {
+  // generate password
+  var password = generatePassword();
+  // select element to insert password into
+  var passwordText = document.querySelector("#password");
+  // insert password into HTML
+  passwordText.value = password;
 }
 
 // Add event listener to generate button. Call writePassword on click
