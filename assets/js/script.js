@@ -1,5 +1,27 @@
 // Assignment code here
 
+// function to generate an array of characters given a starting character and length of the array
+var generateCharsArray = function(startLetter, length){
+  var charArray = [];
+  var startIndex = startLetter.charCodeAt(0);
+  for (i = startIndex; i < (startIndex + length); i++){
+    var character = String.fromCharCode(i);
+    charArray.push(character);
+  }
+  return charArray;
+}
+
+// generate lists of lower, upper, and numeric characters
+var lowerChars = generateCharsArray("a", 26);
+var upperChars = generateCharsArray("A", 26);
+var numericChars = generateCharsArray("0", 10);
+// generate 4 sections of special characters from ascii
+var special1 = generateCharsArray(" ", 16);
+var special2 = generateCharsArray(":", 7);
+var special3 = generateCharsArray("[", 6);
+var special4 = generateCharsArray("{", 4);
+// combine special char arrays into one array
+var specialChars = special1.concat(special2, special3, special4);
 
 // Get references to the #generate element
 var generateBtn = document.querySelector("#generate");
@@ -38,6 +60,8 @@ var generatePassword = function () {
     includeNumeric = characterTypes[2];
     includeSpecial = characterTypes[3];
   }
+
+  // generate a password of passwordLength including each of the character types chosen
   
 }
 
