@@ -11,6 +11,15 @@ var generateCharsArray = function(startLetter, length){
   return charArray;
 }
 
+// function to convert array to string
+var arrayToString = function (array){
+  var string = "";
+  for (i = 0; i < array.length; i++){
+    string += array[i];
+  }
+  return string;
+}
+
 // generate lists of lower, upper, and numeric characters
 var lowerChars = generateCharsArray("a", 26);
 var upperChars = generateCharsArray("A", 26);
@@ -31,6 +40,54 @@ var getCharacters = function(){
   var special = window.confirm("You can include lowercase, uppercase, numeric, and/or special characters. You must include at least one character type.\n\n Would you like to include special characters?");
   // return array of boolean values for whether the user choose to include each character type
   return [lower, upper, numeric, special];
+}
+
+// function to check if any value from one array is contained in another
+var checkForArrayVals = function (mainArray, refArray){
+  for (i = 0; i < refArray.length; i++){
+    // check whether the character at index i of refArray is in mainArray. If so, return true
+    if (mainArray.includes(refArray[i])){
+      return true;
+    }
+  }
+  return false;
+}
+
+// function to check whether a specific character type is in the password and to replace a random index of password with a random index of the character type reference list if there is not a character of that type
+var checkForCharParameter = function (passArray, charTypeRefArray){
+  // check if password generated has any chars from ref array
+  var hasCharType = checkForArrayVals(passArray, charTypeRefArray);
+  // if it does not have any of those char
+  if (!hasCharType){
+    // replace random index of passArray with random index of
+    passArray[Math.floor(Math.random()*passArray.length)] = charTypeRefArray[Math.floor(Math.random()*charTypeRefArray.length)]
+  }
+  return passArray;
+}
+
+// function to check for all specified character types and replace if not in password
+var checkForAllChars = function (passArray, useLower, useUpper, useNumeric, useSpecial){
+  // if user included lower chars
+  if (useLower){
+    // check for lower chars and replace if needed
+    passArray = checkForCharParameter (passArray, lowerChars);
+  }
+  // if user included upper chars
+  if (useUpper){
+    // check for upper chars and replace if needed
+    passArray = checkForCharParameter (passArray, upperChars);
+  }
+  // if user included numeric chars
+  if (useNumeric){
+    // check for numeric chars and replace if needed
+    passArray = checkForCharParameter (passArray, numericChars);
+  }
+  // if user included numeric chars
+  if (useSpecial){
+    // check for special chars and replace if needed
+    passArray = checkForCharParameter (passArray, specialChars);
+  }
+  return passArray;
 }
 
 // function to prompt user for password parameters and generate password
@@ -80,18 +137,64 @@ var generatePassword = function () {
   }
   
   // generate a password of passwordLength including each of the character types chosen
-  var password = "";
+  var password = [];
   
   // generate password of specified length
   for (i = 0; i < passwordLength; i++){
     // choose a random number from 0 to length of passwordCharSet
     var index = Math.floor(Math.random() * passwordCharSet.length);
     // append character at that index to password
-    password += passwordCharSet[index];
-    console.log (index + ", " + password);
+    password.push(passwordCharSet[index]);
+    //console.log (index + ", " + password);
+  }
+
+  // validate that all character types are included in the password using checkForArrayVals
+  // track whether all char types are included. Initially false
+  var hasAllCharTypes = false;
+  // while not all char types are in the password
+  while (!hasAllCharTypes){
+    // set hasAllCharTypes to true for &&ing
+    hasAllCharTypes = true;
+    // if user chose lower hcars
+    if (includeLower){
+      // check whether password has lower chars
+      var hasLower = checkForArrayVals(password, lowerChars);
+      // update hasAllCharTypes using and. If hasLower is true, hasAllCharTypes will be true since it is already set to true
+      hasAllCharTypes = hasAllCharTypes && hasLower;
+    }
+    // if user chose upper chars
+    if (includeUpper){
+      // check whether password has upper chars
+      var hasUpper = checkForArrayVals(password, upperChars);
+      // update hasAllCharTypes
+      hasAllCharTypes = hasAllCharTypes && hasUpper;
+    }
+    // if user chose numeric chars
+    if (includeNumeric){
+      // check whether password has numeric chars
+      var hasNumeric = checkForArrayVals(password, numericChars);
+      // update hasAllCharTypes
+      hasAllCharTypes = hasAllCharTypes && hasNumeric;
+    }
+    // if user chose special chars
+    if (includeSpecial){
+      // check whether password has special chars
+      var hasSpecial = checkForArrayVals(password, specialChars);
+      // update hasAllCharTypes
+      hasAllCharTypes = hasAllCharTypes && hasSpecial;
+    }
+    //console.log("password before replace", password);
+    // if not all char types were in the password
+    if (!hasAllCharTypes){
+      // use the function to replace a random index of password with one of the specified char types
+      password = checkForAllChars(password, includeLower, includeUpper, includeNumeric, includeSpecial);
+    }  
+    //console.log("password after replace", password);
   }
   
-  return password;
+  // convert password (array) to string
+  var strPassword = arrayToString(password);
+  return strPassword;
 }
 
 // Get references to the #generate element
